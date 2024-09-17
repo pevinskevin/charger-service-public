@@ -1,0 +1,24 @@
+
+run:
+  cargo build
+  cargo run
+
+list TYPE='application/json':
+  curl -sS -w "\n" -H "Accepted: {{ TYPE }}" http://127.0.0.1:8000/directory
+
+add NAME ADDR SERVICE_TYPE='charger' METADATA='{}':
+  curl -v -X POST \
+    -H "Content-Type: application/json" \
+    -d '{ "unique_name": "{{ NAME }}", \
+          "network_address": "{{ ADDR }}", \
+          "service_type": "{{ SERVICE_TYPE }}", \
+          "metadata": {{ METADATA }} }' \
+    http://127.0.0.1:8000/directory/register
+
+woot:
+  curl -v -X POST \
+    -H "Content-Type: application/json" \
+    -d '{"unique_name":"charger-1","network_address":"http://127.0.0.1:8080/","service_type":"charger","metadata":""}' \
+    http://127.0.0.1:8000/directory/register
+
+

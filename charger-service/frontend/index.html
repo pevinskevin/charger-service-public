@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Charger Service</h1>
+<p>Her kunne være en <span id="front-end">front-end</span> til en ladestander.</p>
+<p>Det her er slet ikke pænt nok, men det er da en start:</p>
+<pre id="debug-output"></pre>
+
+<script src="jquery-3.7.1.min.js"></script>
+<script>
+    $(function() {
+
+        $("#front-end").html("cool front-end").css("color", "green");
+
+        $.get("/charger").done(function(event) {
+            var charge_points = event.charge_points;
+
+            $("#debug-output").html(JSON.stringify(charge_points));
+
+            // TODO: Draw these using HTML, CSS and jQuery.
+            for (var i = 0; i < charge_points.length; i++) {
+                var charge_point = charge_points[i];
+                console.log(charge_point);
+            }
+        }).fail(function(event) {
+            console.log(event);
+        });
+
+    });
+</script>
+</body>
+</html>
