@@ -16,7 +16,10 @@ services:
     environment:
       - DIRECTORY_ENDPOINT=http://directory:8000/directory
       - CHARGER_ENDPOINT=http://charger:8080/charger
-      # FIXME: Create the environment variable `NUM_CHARGE_POINTS` and assign to it a positive number.
+      - NUM_CHARGE_POINTS=2
+      - MAX_EFFEKT_KILOWATT=11
+      - CHARGER_NAME=charger_1
+
       # HINT: The other halves of this task live inside Charger.java and RegisterRequest.java.
     volumes:
       - ./charger-service/frontend:/app/charger-service/frontend
@@ -30,7 +33,28 @@ services:
     environment:
       - DIRECTORY_ENDPOINT=http://directory:8000/directory
       - CHARGER_ENDPOINT=http://charger:8080/charger
-      # FIXME: Create the environment variable `NUM_CHARGE_POINTS` and assign to it a positive number.
+      - NUM_CHARGE_POINTS=3
+      - MAX_EFFEKT_KILOWATT=12
+      - CHARGER_NAME=charger_2
+      # HINT: The other halves of this task live inside Charger.java and RegisterRequest.java.
+    volumes:
+      - ./charger-service/frontend:/app/charger-service/frontend
+
+
+
+  charger-3:
+    build:
+      context: ./charger-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8080"
+    environment:
+      - DIRECTORY_ENDPOINT=http://directory:8000/directory
+      - CHARGER_ENDPOINT=http://charger:8080/charger
+      - NUM_CHARGE_POINTS=4
+      - MAX_EFFEKT_KILOWATT=13
+      - CHARGER_NAME=charger_3
+
       # HINT: The other halves of this task live inside Charger.java and RegisterRequest.java.
     volumes:
       - ./charger-service/frontend:/app/charger-service/frontend

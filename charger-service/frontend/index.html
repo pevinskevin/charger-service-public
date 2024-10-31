@@ -9,24 +9,72 @@
 <script src="jquery-3.7.1.min.js"></script>
 <script>
     $(function() {
+        getAndDisplayChargPointData();
+        setInterval(getAndDisplayChargPointData, 10000);
+    });
 
+    function getAndDisplayChargPointData() {
         $("#front-end").html("cool front-end").css("color", "green");
 
         $.get("/charger").done(function(event) {
             var charge_points = event.charge_points;
 
-            $("#debug-output").html(JSON.stringify(charge_points));
+            $("#debug-output").empty();
 
-            // TODO: Draw these using HTML, CSS and jQuery.
             for (var i = 0; i < charge_points.length; i++) {
                 var charge_point = charge_points[i];
                 console.log(charge_point);
-            }
-        }).fail(function(event) {
-            console.log(event);
-        });
 
-    });
+                var chargePointDiv = $("<div></div>").css({
+                    "border": "1px solid #ccc",
+                    "padding": "10px",
+                    "margin": "5px",
+                    "background-color": "#f9f9f9"
+                });
+
+                chargePointDiv.append("<p>Charge Point ID: " + charge_point.id + "</p>");
+                chargePointDiv.append("<p>Total Effect: " + charge_point.maxEffectKilowatt + " kW</p>");
+                chargePointDiv.append("<p>Status: " + charge_point.status + "</p>");
+
+                var chargePointButton = $("<button>Stop Charging</button>").css({
+                    "border": "1px solid #ccc",
+                    "padding": "5px",
+                    "margin": "5px",
+                    "background-color": "#f1f1f1",
+                    "cursor": "pointer"
+                });
+
+                if (charge_point.status !== "StateC") {
+                    chargePointButton.prop("disabled", true);
+                }
+
+                chargePointButton.click((function(id) {
+                    return function() {
+                        console.log("Attempting to stop charging for charge_point_id:", id); // Debugging log
+
+                        //Had to add -1 to ID as it otherwise would get an array/list out-of-bounds error
+                        //and thus cause a 505 error.
+                        $.post("/charger/stop", { charge_point_id: id-1 })
+                            .done(function(response) {
+                                console.log("Charging stopped successfully:", response);
+                                // Refresh data after stopping charging
+                                getAndDisplayChargPointData();
+                            })
+                            .fail(function(error) {
+                                console.log("Failed to stop charging:", error);
+                            });
+                    };
+                })(charge_point.id));
+
+
+                chargePointDiv.append(chargePointButton);
+                $("#debug-output").append(chargePointDiv);
+            }
+
+        }).fail(function(event) {
+            console.log("Failed to fetch data:", event);
+        });
+    }
 </script>
 </body>
 </html>

@@ -17,8 +17,8 @@ public class Charger {
         // FIXME: Use ChargerEnv methods to read `NUM_CHARGE_POINTS` and `MAX_EFFECT_KILOWATT` from environment variable.
         // FIXME: Environment variables are defined in compose.yaml, so update both here and there!
         // HINT: Look in the file ChargerEnv.java for useful helper functions!
-        var numChargePoints = 2;
-        var maxEffectKilowatt = 11;
+        var numChargePoints = ChargerEnv.withDefaultInt("NUM_CHARGE_POINTS", 42);
+        var maxEffectKilowatt = ChargerEnv.withDefaultInt("MAX_EFFEKT_KILOWATT", 42);
         var charge_points = new ArrayList<ChargePoint>(numChargePoints);
         for (int cpid = 1; cpid <= numChargePoints; cpid++) {
             charge_points.add(new ChargePoint(cpid, maxEffectKilowatt, ChargePointStatus.StateU));

@@ -21,7 +21,7 @@ public class RegisterRequest {
     public static void registerService() {
         try {
             // FIXME: Load the charger's name from the environment variable `CHARGER_NAME`.
-            var uniqueName = "charger-1";
+            var uniqueName = ChargerEnv.withDefaultStr("CHARGER_NAME", "default value");
             var chargerEndpoint = ChargerEnv.withDefaultStr("CHARGER_ENDPOINT", "http://127.0.0.1:8080/charger");
             var payload = new RegisterRequest(
                     uniqueName,
